@@ -1,0 +1,39 @@
+﻿services:
+  service:
+    image: mallenomtest
+    build:
+      context: .
+      dockerfile: MallenomTest.Server/Dockerfile
+    ports:
+      - "5141:8080"
+    environment:
+      - DB_HOST=localhost
+      - DB_PORT=5432
+      - DB_USERNAME=user
+      - DB_PASSWORD=mallenom
+      - DB_DATABASE=mallenom
+#    volumes:
+#      - files-volume:/app
+    networks:
+      - mallenom-net
+      
+  database:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=mallenom
+      - POSTGRES_DB=mallenom
+    ports:
+      - "5432:5432"
+    volumes:
+      - data-volume:/var/lib/postgresql/data
+    networks:
+      - mallenom-net
+
+volumes:
+  data-volume:
+  files-volume:
+    
+networks:
+  mallenom-net:
