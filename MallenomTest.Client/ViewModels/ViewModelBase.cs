@@ -2,6 +2,6 @@
 
 namespace MallenomTest.Client.ViewModels;
 
-public class ViewModelBase : ObservableObject
+public class ViewModelBase : ReactiveUI.ReactiveObject
 {
 }

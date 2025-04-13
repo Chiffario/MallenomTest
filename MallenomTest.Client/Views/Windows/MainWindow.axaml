@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MallenomTest.Client.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MallenomTest.Client.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MallenomTest.Client"
+        Background="#e6e9ef">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainViewModel/>
+    </Design.DataContext>
+    <Panel Margin="20">
+        <Panel Background="#eff1f5">
+            <DataGrid x:Name="ImageGrid"
+                      Margin="20" ItemsSource="{Binding Images}"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All"
+                      BorderThickness="1" BorderBrush="Gray">
+                <DataGrid.Columns>
+                    <!-- <DataGridTextColumn Header="ID" Binding="{Binding Id}"></DataGridTextColumn> -->
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Image" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding ImageBytes}" Height="200" Width="300"></Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Panel>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            <Button Background="#9ca0b0" Command="{Binding GetImagesCommand}">Запросить</Button>
+            <Button Background="#9ca0b0" Command="{Binding AddImageCommand}">Добавить</Button>
+            <Button Background="#9ca0b0" 
+                    Command="{Binding UpdateImageCommand}" 
+                    CommandParameter="{Binding #ImageGrid.SelectedItem}" 
+                    Name="UpdateButton">Обновить</Button>
+            <Button Background="#9ca0b0" 
+                    Command="{Binding DeleteImageCommand}" 
+                    CommandParameter="{Binding #ImageGrid.SelectedItem}">Удалить</Button>
+        </StackPanel>
+    </Panel>
+</Window>

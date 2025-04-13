@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Net.Mime;
 
 namespace MallenomTest.Database.Models;
 
@@ -11,5 +10,10 @@ public class ImageModel
     // TODO: This kind of needs validation for storage reasons
     public required string Name { get; set; }
     
-    public required string MimeType { get; set; }
+    public required string FileType { get; set; }
+
+    public string CreateFilePath()
+    {
+        return $"{Id}{FileType}";
+    }
 }

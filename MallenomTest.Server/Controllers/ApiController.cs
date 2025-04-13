@@ -14,22 +14,22 @@ namespace MallenomTest.Controllers
         
         [Route("all")]
         [HttpGet]
-        public List<ImageContract> GetAllImages()
+        public List<ImageResponse> GetAllImages()
         {
-            return _imagesService.GetAll() ?? new List<ImageContract>();
+            return _imagesService.GetAll() ?? new List<ImageResponse>();
         }
 
         [Route("add")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] ImageJson image)
+        public async Task<IActionResult> Add([FromBody] ImageRequest image)
         {
-            await _imagesService.Add(image);
+            _imagesService.Add(image);
             return Ok();
         } 
 
         [Route("update/{id}")]
         [HttpPut]
-        public async Task<IActionResult> Update(int id, [FromBody] ImageJson image)
+        public async Task<IActionResult> Update(int id, [FromBody] ImageRequest image)
         {
             await _imagesService.Update(id, image);
             return Ok();
@@ -43,9 +43,10 @@ namespace MallenomTest.Controllers
             {
                 await _imagesService.Delete(id);
             }
-            catch (Exception e)
+            catch (DirectoryNotFoundException notFoundException)
             {
-                return BadRequest();
+                _logger.LogError("Failed to delete file");
+                return NotFound();
             }
             return Ok();
         }

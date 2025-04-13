@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MallenomTest.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250412190100_InitialCreate")]
+    [Migration("20250413130156_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -32,7 +32,7 @@ namespace MallenomTest.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("MimeType")
+                    b.Property<string>("FileType")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -1,11 +1,20 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
+using System.Net.Http;
+using Avalonia.Logging;
 using Avalonia.Markup.Xaml;
+using MallenomTest.Client.Api;
+using MallenomTest.Client.Api.Interfaces;
+using MallenomTest.Client.Services;
+using MallenomTest.Client.Services.Interfaces;
 using MallenomTest.Client.ViewModels;
 using MallenomTest.Client.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace MallenomTest.Client;
 
@@ -25,8 +34,15 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = new MainViewModel()
             };
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton<IImageApiProvider, ImageApiProvider>();
+            serviceCollection.AddTransient<MainViewModel>();
+            serviceCollection.AddSingleton<HttpClient>();
+            serviceCollection.AddSingleton<IFilesService>(x => new FilesService(desktop.MainWindow));
+            
+            ServiceProvider = serviceCollection.BuildServiceProvider();
         }
 
         base.OnFrameworkInitializationCompleted();
@@ -44,4 +60,8 @@ public partial class App : Application
             BindingPlugins.DataValidators.Remove(plugin);
         }
     }
+
+    public new static App? Current => Application.Current as App;
+    
+    public IServiceProvider? ServiceProvider { get; private set; }
 }

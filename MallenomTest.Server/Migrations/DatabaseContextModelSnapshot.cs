@@ -29,7 +29,7 @@ namespace MallenomTest.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("MimeType")
+                    b.Property<string>("FileType")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -5,8 +5,8 @@ namespace MallenomTest.Services.Interfaces;
 
 public interface IImagesService
 {
-    List<ImageContract>? GetAll();
-    Task Add(ImageJson imageJson);
-    Task Update(int id, ImageJson imageJson);
+    List<ImageResponse>? GetAll();
+    void Add(ImageRequest imageRequest);
+    Task Update(int id, ImageRequest imageRequest);
     Task Delete(int id);
 }
