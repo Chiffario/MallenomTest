@@ -5,5 +5,5 @@ namespace MallenomTest.Client.Services.Interfaces;
 
 public interface IFilesService
 {
-    public Task<IStorageFile> OpenFileAsync();
+    public Task<IStorageFile?> OpenFileAsync();
 }

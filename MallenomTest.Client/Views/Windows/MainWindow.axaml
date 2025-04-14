@@ -1,4 +1,5 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window 
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:MallenomTest.Client.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,42 +10,76 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="MallenomTest.Client"
         Background="#e6e9ef">
-
+    
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel/>
     </Design.DataContext>
-    <Panel Margin="20">
-        <Panel Background="#eff1f5">
+    <Panel Margin="20"
+           Name="MainPanel">
+        <Panel Background="#eff1f5"
+               Margin="0, 0, 0, 50">
+            <Popup Name="Notification"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Width="400"
+                   Height="100"
+                   Placement="Center"
+                   IsLightDismissEnabled="True"
+                   Topmost="True"
+                   IsOpen="{Binding IsNotificationOpen}">
+                <Border BorderBrush="#7c7f93" Background="#ccd0da">
+                    <TextBlock 
+                        Foreground="#4c4f69"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="32"
+                        Text="Изображение удалено"></TextBlock>
+                </Border>
+            </Popup>
             <DataGrid x:Name="ImageGrid"
-                      Margin="20" ItemsSource="{Binding Images}"
+                      Margin="20"
+                      ItemsSource="{Binding Images}"
                       IsReadOnly="True"
                       GridLinesVisibility="All"
-                      BorderThickness="1" BorderBrush="Gray">
+                      BorderThickness="1" BorderBrush="Gray"
+                      SelectedItem="{Binding SelectedImage}"
+            >
                 <DataGrid.Columns>
                     <!-- <DataGridTextColumn Header="ID" Binding="{Binding Id}"></DataGridTextColumn> -->
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Image" Width="*">
+                    <DataGridTextColumn Header="Наименование" Binding="{Binding Name}"></DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Изображение" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding ImageBytes}" Height="200" Width="300"></Image>
+                                <Image Source="{Binding ImageBytes}" Height="200"></Image>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Panel>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-            <Button Background="#9ca0b0" Command="{Binding GetImagesCommand}">Запросить</Button>
-            <Button Background="#9ca0b0" Command="{Binding AddImageCommand}">Добавить</Button>
-            <Button Background="#9ca0b0" 
+        <Grid ColumnDefinitions="*, *, *"
+              Width="{Binding #MainPanel.Width}"
+              VerticalAlignment="Bottom" 
+              HorizontalAlignment="Center">
+            <Button Background="#ccd0da"
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="0"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding AddImageCommand}">Добавить</Button>
+            <Button Background="#ccd0da" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Grid.Column="1"
                     Command="{Binding UpdateImageCommand}" 
-                    CommandParameter="{Binding #ImageGrid.SelectedItem}" 
-                    Name="UpdateButton">Обновить</Button>
-            <Button Background="#9ca0b0" 
+                    IsEnabled="{Binding Enable}">Обновить</Button>
+            <Button Background="#ccd0da" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Grid.Column="2"
                     Command="{Binding DeleteImageCommand}" 
-                    CommandParameter="{Binding #ImageGrid.SelectedItem}">Удалить</Button>
-        </StackPanel>
+                    IsEnabled="{Binding Enable}">Удалить</Button>
+        </Grid>
     </Panel>
 </Window>

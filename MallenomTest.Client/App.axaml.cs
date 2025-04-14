@@ -5,6 +5,8 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Logging;
 using Avalonia.Markup.Xaml;
 using MallenomTest.Client.Api;
@@ -25,18 +27,23 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
-    public override void OnFrameworkInitializationCompleted()
+    public override async void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
+            var mainViewModel = new MainViewModel();
+            var mainWindow = new MainWindow
             {
-                DataContext = new MainViewModel()
+                DataContext = mainViewModel
             };
+
+            desktop.MainWindow = mainWindow;
+            
             var serviceCollection = new ServiceCollection();
+            
             serviceCollection.AddSingleton<IImageApiProvider, ImageApiProvider>();
             serviceCollection.AddTransient<MainViewModel>();
             serviceCollection.AddSingleton<HttpClient>();

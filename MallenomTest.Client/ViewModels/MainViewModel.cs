@@ -3,24 +3,41 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MallenomTest.Client.Api.Interfaces;
 using MallenomTest.Client.Models;
 using MallenomTest.Client.Services.Interfaces;
 using MallenomTest.Services.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace MallenomTest.Client.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    private bool _enable = false;
+
+    public bool Enable
+    {
+        get => _enable;
+        set => this.RaiseAndSetIfChanged(ref _enable, value);
+    }
+
+    private bool _isNotificationOpen;
+
+    public bool IsNotificationOpen
+    {
+        get => _isNotificationOpen;
+        set => this.RaiseAndSetIfChanged(ref _isNotificationOpen, value);
+    }
+
+    private string PopupMessage { get; set; }
+    
     private ObservableCollection<ImageModel> _images;
+    private ImageModel? _selectedImage;
+    
     public ObservableCollection<ImageModel> Images
     {
         get
@@ -33,36 +50,50 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
+    public ImageModel? SelectedImage
+    {
+        get => _selectedImage;
+        set
+        {
+            Enable = value is not null;
+            _selectedImage = value;
+        }
+    }
+
     public MainViewModel()
     {
-        Images = new();
+        Images = new ObservableCollection<ImageModel>();
+        Enable = false;
+    }
+
+    public async Task GetImages()
+    {
+        await GetImagesAsync();
     }
     
     [RelayCommand]
     private async Task GetImagesAsync()
     {
         var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>();
+        var logger = App.Current?.ServiceProvider?.GetService<ILogger<MainViewModel>>();
         if (imageApiProvider is null)
         {
-            Console.WriteLine("Image api provider not registered");
+            logger.LogError("Image api provider was not provided");
             return;
         }
-        Console.WriteLine("Requesting images");
         var images = await imageApiProvider.Get();
-        var imageList = new ObservableCollection<ImageModel>();
+        var imageList = new List<ImageModel>();
         foreach (var image in images)
         {
-            Console.WriteLine($"{image.Id}: {image.Name}");
             var byteForm = image.Base64EncodedImage;
             var imageStream = new MemoryStream(byteForm);
             var bitmap = new Bitmap(imageStream);
-            // imageControl.Source = bitmap;
             
             var imageModel = new ImageModel(image.Name, bitmap, image.Id);
             imageList.Add(imageModel);
         };
-        Images = imageList;
-        Console.WriteLine(Images.Count);
+        imageList.Sort((lhs, rhs) => lhs.Id.CompareTo(rhs.Id));
+        Images = new ObservableCollection<ImageModel>(imageList);
     }
 
     [RelayCommand]
@@ -73,7 +104,7 @@ public partial class MainViewModel : ViewModelBase
         var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>();
 
         var file = await filesService?
-            .OpenFileAsync();
+            .OpenFileAsync()!;
 
         if (file is null)
         {
@@ -103,12 +134,12 @@ public partial class MainViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    private async Task UpdateImage(ImageModel imageModel)
+    private async Task UpdateImage()
     {
         var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>()!;        
         var filesService = App.Current?.ServiceProvider?.GetService<IFilesService>();
 
-        var file = await filesService?.OpenFileAsync();
+        var file = await filesService?.OpenFileAsync()!;
 
         if (file is null)
         {
@@ -125,7 +156,7 @@ public partial class MainViewModel : ViewModelBase
             FileType = extension,
             Base64EncodedImage = Convert.ToBase64String(fileBytes)
         };
-        var resp = await imageApiProvider.Update(imageModel.Id, req);
+        var resp = await imageApiProvider.Update(SelectedImage!.Id, req);
         
         if (resp.IsSuccessStatusCode)
         {
@@ -133,22 +164,31 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            Console.WriteLine($"Couldn't update an image {imageModel.Id} - {resp.StatusCode}");
+            Console.WriteLine($"Couldn't update an image {SelectedImage!.Id} - {resp.StatusCode}");
         }
     }
     
     [RelayCommand]
-    private async Task DeleteImage(ImageModel imageModel)
+    private async Task DeleteImage()
     {
         var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>()!;
-        var resp = await imageApiProvider.Delete(imageModel.Id);
+        var resp = await imageApiProvider.Delete(SelectedImage!.Id);
         if (resp.IsSuccessStatusCode)
         {
-            await GetImagesAsync();
+            var popup = ShowPopup();
+            var images = GetImagesAsync();
+            await Task.WhenAll(popup, images);
         }
         else
         {
-            Console.WriteLine($"Couldn't delete an image {imageModel.Id} - {resp.StatusCode}");
+            Console.WriteLine($"Couldn't delete an image {SelectedImage.Id} - {resp.StatusCode}");
         }
+    }
+
+    private async Task ShowPopup()
+    {
+        IsNotificationOpen = true;
+        await Task.Delay(2000);
+        IsNotificationOpen = false;
     }
 }
