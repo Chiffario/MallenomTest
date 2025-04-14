@@ -14,6 +14,11 @@ public class FilesService : IFilesService
     {
         _target = target;
     }
+    
+    /// <summary>
+    /// Opens system file picker to select a file
+    /// </summary>
+    /// <returns></returns>
     public async Task<IStorageFile?> OpenFileAsync()
     {
         IReadOnlyList<IStorageFile?> files = await _target.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()

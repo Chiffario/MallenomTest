@@ -23,7 +23,6 @@ public class ImageApiProvider : IImageApiProvider
     
     
     private readonly HttpClient _httpClient;
-    // private readonly ILogger<ImageApiProvider> _logger;
 
     public ImageApiProvider(HttpClient client)
     {
