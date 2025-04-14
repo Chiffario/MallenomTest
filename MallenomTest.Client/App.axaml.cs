@@ -16,8 +16,6 @@ using MallenomTest.Client.Services.Interfaces;
 using MallenomTest.Client.ViewModels;
 using MallenomTest.Client.Views;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
 namespace MallenomTest.Client;
 
 public partial class App : Application
@@ -31,8 +29,6 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
-            // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             var mainViewModel = new MainViewModel();
             var mainWindow = new MainWindow

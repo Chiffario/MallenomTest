@@ -21,17 +21,33 @@ namespace MallenomTest.Controllers
 
         [Route("add")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] ImageRequest image)
+        public Task<IActionResult> Add([FromBody] ImageRequest image)
         {
-            _imagesService.Add(image);
-            return Ok();
+            try
+            {
+                _imagesService.Add(image);
+            }
+            catch (Exception e) 
+            {
+                _logger.LogError($"Failed to add a file: {e}");
+                return Task.FromResult<IActionResult>(new StatusCodeResult(StatusCodes.Status500InternalServerError));
+            }
+            return Task.FromResult<IActionResult>(Ok());
         } 
 
         [Route("update/{id}")]
         [HttpPut]
         public async Task<IActionResult> Update(int id, [FromBody] ImageRequest image)
         {
-            await _imagesService.Update(id, image);
+            try
+            {
+                await _imagesService.Update(id, image);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to update file: {e}");
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
             return Ok();
         }
 
@@ -43,7 +59,7 @@ namespace MallenomTest.Controllers
             {
                 await _imagesService.Delete(id);
             }
-            catch (DirectoryNotFoundException notFoundException)
+            catch
             {
                 _logger.LogError("Failed to delete file");
                 return NotFound();

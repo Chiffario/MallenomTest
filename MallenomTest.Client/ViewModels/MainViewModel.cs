@@ -10,7 +10,6 @@ using MallenomTest.Client.Models;
 using MallenomTest.Client.Services.Interfaces;
 using MallenomTest.Services.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace MallenomTest.Client.ViewModels;

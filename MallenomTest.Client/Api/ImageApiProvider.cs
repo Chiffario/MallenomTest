@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MallenomTest.Client.Api.Interfaces;
 using MallenomTest.Contracts;
 using MallenomTest.Services.Models;
-using Microsoft.Extensions.Logging;
-using Splat;
-using ILogger = Splat.ILogger;
 
 namespace MallenomTest.Client.Api;
 

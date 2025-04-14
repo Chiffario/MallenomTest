@@ -2,7 +2,6 @@ using MallenomTest.Database;
 using MallenomTest.Services;
 using MallenomTest.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Npgsql;
 
 namespace MallenomTest;
@@ -56,8 +55,7 @@ public class Program
         app.MapControllers();
 
         app.MapHealthChecks("/health");
-
-        // throw new NotImplementedException();
+        
         app.Run();
     }
 }

@@ -13,7 +13,6 @@ using MallenomTest.Client.Services.Interfaces;
 using MallenomTest.Client.ViewModels;
 using MallenomTest.Services.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace MallenomTest.Client.Views;
 
