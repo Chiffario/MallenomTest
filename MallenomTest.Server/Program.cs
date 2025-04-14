@@ -1,4 +1,3 @@
-using MallenomTest.Configuration;
 using MallenomTest.Database;
 using MallenomTest.Services;
 using MallenomTest.Services.Interfaces;

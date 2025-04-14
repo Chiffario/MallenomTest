@@ -42,6 +42,7 @@
                       Margin="20"
                       ItemsSource="{Binding Images}"
                       IsReadOnly="True"
+                      SelectionMode="Single"
                       GridLinesVisibility="All"
                       BorderThickness="1" BorderBrush="Gray"
                       SelectedItem="{Binding SelectedImage}"
