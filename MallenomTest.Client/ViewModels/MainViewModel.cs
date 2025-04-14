@@ -17,6 +17,7 @@ namespace MallenomTest.Client.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    #region Properties
     private bool _enable = false;
 
     public bool Enable
@@ -33,10 +34,7 @@ public partial class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isNotificationOpen, value);
     }
 
-    private string PopupMessage { get; set; }
-    
-    private ObservableCollection<ImageModel> _images;
-    private ImageModel? _selectedImage;
+    private ObservableCollection<ImageModel> _images = null!;
     
     public ObservableCollection<ImageModel> Images
     {
@@ -50,6 +48,8 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
+    private ImageModel? _selectedImage;
+
     public ImageModel? SelectedImage
     {
         get => _selectedImage;
@@ -59,30 +59,35 @@ public partial class MainViewModel : ViewModelBase
             _selectedImage = value;
         }
     }
+    
+    #endregion
+    
+    #region .ctor
 
     public MainViewModel()
     {
         Images = new ObservableCollection<ImageModel>();
         Enable = false;
     }
+    
+    #endregion
 
-    public async Task GetImages()
-    {
-        await GetImagesAsync();
-    }
+    #region Commands
+    
     
     [RelayCommand]
     private async Task GetImagesAsync()
     {
         var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>();
-        var logger = App.Current?.ServiceProvider?.GetService<ILogger<MainViewModel>>();
         if (imageApiProvider is null)
         {
-            logger.LogError("Image api provider was not provided");
+            Console.WriteLine("Image Provider was not found");
             return;
         }
+        
         var images = await imageApiProvider.Get();
         var imageList = new List<ImageModel>();
+        
         foreach (var image in images)
         {
             var byteForm = image.Base64EncodedImage;
@@ -92,7 +97,10 @@ public partial class MainViewModel : ViewModelBase
             var imageModel = new ImageModel(image.Name, bitmap, image.Id);
             imageList.Add(imageModel);
         };
+        
+        // Comparison is defined in-place because this is the only case of it being used
         imageList.Sort((lhs, rhs) => lhs.Id.CompareTo(rhs.Id));
+        
         Images = new ObservableCollection<ImageModel>(imageList);
     }
 
@@ -103,6 +111,12 @@ public partial class MainViewModel : ViewModelBase
         var filesService = App.Current?.ServiceProvider?.GetService<IFilesService>();
         var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>();
 
+        if (imageApiProvider is null)
+        {
+            Console.WriteLine("Image Provider was not found");
+            return;
+        }
+        
         var file = await filesService?
             .OpenFileAsync()!;
 
@@ -111,8 +125,7 @@ public partial class MainViewModel : ViewModelBase
             Console.WriteLine("File not chosen");
             return;
         }
-
-        Console.WriteLine($"Got file: {file.Name}");
+        
         var fileBytes = File.ReadAllBytes(file.Path.AbsolutePath);
         var extension = Path.GetExtension(file.Path.AbsolutePath);
         var resp = await imageApiProvider.Add(new ImageRequest
@@ -156,6 +169,7 @@ public partial class MainViewModel : ViewModelBase
             FileType = extension,
             Base64EncodedImage = Convert.ToBase64String(fileBytes)
         };
+        // SelectedImage is never `null` as the respective button cannot be pushed without a selected image
         var resp = await imageApiProvider.Update(SelectedImage!.Id, req);
         
         if (resp.IsSuccessStatusCode)
@@ -184,6 +198,10 @@ public partial class MainViewModel : ViewModelBase
             Console.WriteLine($"Couldn't delete an image {SelectedImage.Id} - {resp.StatusCode}");
         }
     }
+    
+    #endregion
+    
+    #region Utility
 
     private async Task ShowPopup()
     {
@@ -191,4 +209,6 @@ public partial class MainViewModel : ViewModelBase
         await Task.Delay(2000);
         IsNotificationOpen = false;
     }
+    
+    #endregion
 }
