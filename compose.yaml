@@ -1,24 +1,30 @@
 ﻿services:
   service:
     image: mallenomtest
+    container_name: mallenom_backend
     build:
       context: .
-      dockerfile: MallenomTest.Server/Dockerfile
-    ports:
-      - "5141:8080"
+      dockerfile: ./Dockerfile
+      no_cache: true
     environment:
-      - DB_HOST=localhost
+      - DB_HOST=mallenom_db
       - DB_PORT=5432
       - DB_USERNAME=user
       - DB_PASSWORD=mallenom
       - DB_DATABASE=mallenom
-#    volumes:
-#      - files-volume:/app
+    ports:
+      - "5141:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - files-volume:/app/storage
     networks:
       - mallenom-net
       
   database:
     image: postgres:alpine
+    container_name: mallenom_db
     restart: unless-stopped
     environment:
       - POSTGRES_USER=user
@@ -30,6 +36,11 @@
       - data-volume:/var/lib/postgresql/data
     networks:
       - mallenom-net
+    healthcheck:
+      test: pg_isready -U user -d mallenom
+      interval: 5s
+      timeout: 3s
+      retries: 3
 
 volumes:
   data-volume:

@@ -24,17 +24,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Contracts\" />
+      <Folder Include="Migrations\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MallenomTest.Contracts\MallenomTest.Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

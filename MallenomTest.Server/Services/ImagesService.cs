@@ -31,7 +31,7 @@ public class ImagesService : IImagesService
                     Id = i.Id,
                     Name = i.Name,
                     FileType = i.FileType,
-                    Base64EncodedImage = File.ReadAllBytes(Path.Combine(_webHostEnvironment.ContentRootPath, i.CreateFilePath()))
+                    Base64EncodedImage = File.ReadAllBytes(Path.Combine(_webHostEnvironment.ContentRootPath, "storage", i.CreateFilePath()))
                 }
             )
             .Take(50)
@@ -51,7 +51,7 @@ public class ImagesService : IImagesService
         _databaseContext.SaveChanges();
         byte[] imageBytes = Convert.FromBase64String(imageRequest.Base64EncodedImage);
 
-        string imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, image.CreateFilePath());
+        string imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "storage", image.CreateFilePath());
         File.WriteAllBytes(imagePath, imageBytes);
         // TODO: Add a real return type lol
          
@@ -60,9 +60,9 @@ public class ImagesService : IImagesService
     public Task Update(int id, ImageRequest imageRequest)
     {
         var img =  _databaseContext.Images.First(img => img.Id == id);
-        string imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, img.CreateFilePath());
+        string imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "storage", img.CreateFilePath());
         File.Delete(imagePath);
-        string newImagePath = Path.Combine(_webHostEnvironment.ContentRootPath, img.CreateFilePath());
+        string newImagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "storage", img.CreateFilePath());
         byte[] imageBytes = Convert.FromBase64String(imageRequest.Base64EncodedImage);
         img.Name = imageRequest.Name;
         _logger.LogInformation($"Updated {img.Id} and changed name from {img.Name} -> {imageRequest.Name}");
@@ -78,7 +78,7 @@ public class ImagesService : IImagesService
             _logger.LogError("ID not found in db");
             throw new DirectoryNotFoundException();
         }
-        string imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, toDelete.CreateFilePath());
+        string imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "storage", toDelete.CreateFilePath());
         File.Delete(imagePath);
         _logger.LogInformation($"Deleting at path {imagePath}");
         _databaseContext.Images.Remove(toDelete);

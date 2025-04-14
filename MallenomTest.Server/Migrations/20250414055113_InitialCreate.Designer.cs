@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MallenomTest.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250413130156_InitialCreate")]
+    [Migration("20250414055113_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

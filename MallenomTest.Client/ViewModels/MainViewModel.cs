@@ -72,7 +72,8 @@ public partial class MainViewModel : ViewModelBase
         var filesService = App.Current?.ServiceProvider?.GetService<IFilesService>();
         var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>();
 
-        var file = await filesService?.OpenFileAsync();
+        var file = await filesService?
+            .OpenFileAsync();
 
         if (file is null)
         {

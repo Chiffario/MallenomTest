@@ -3,19 +3,19 @@ services:
   service:
     build:
       context: "/home/chiffa/Dev/Solutions/MallenomTest"
-      dockerfile: "MallenomTest.Server/Dockerfile"
+      dockerfile: "./Dockerfile"
       target: "base"
     command: []
     entrypoint:
     - "dotnet"
-    - "/app-1/bin/Debug/net9.0/MallenomTest.Server.dll"
+    - "/app/bin/Debug/net9.0/MallenomTest.Server.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
     image: "mallenomtest:dev"
     ports: []
     volumes:
-    - "/home/chiffa/Dev/Solutions/MallenomTest/MallenomTest.Server:/app-1:rw"
+    - "/home/chiffa/Dev/Solutions/MallenomTest/MallenomTest.Server:/app:rw"
     - "/home/chiffa/Dev/Solutions/MallenomTest:/src:rw"
     - "/home/chiffa/.nuget/packages:/home/app/.nuget/packages"
-    working_dir: "/app-1"
+    working_dir: "/app"
