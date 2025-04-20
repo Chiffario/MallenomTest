@@ -7,11 +7,17 @@ namespace MallenomTest.Controllers
 {
     [ApiController]
     [Route("api/images")]
-    public class ApiController(ILogger<ApiController> logger, IImagesService imagesService) : ControllerBase
+    public class ApiController : ControllerBase
     {
-        private readonly ILogger<ApiController> _logger = logger;
-        private readonly IImagesService _imagesService = imagesService;
-        
+        private readonly ILogger<ApiController> _logger;
+        private readonly IImagesService _imagesService;
+
+        public ApiController(ILogger<ApiController> logger, IImagesService imagesService)
+        {
+            _logger = logger;
+            _imagesService = imagesService;
+        }
+
         [Route("all")]
         [HttpGet]
         public List<ImageResponse> GetAllImages()
