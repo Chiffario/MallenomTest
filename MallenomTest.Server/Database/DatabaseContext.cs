@@ -23,20 +23,24 @@ public sealed class DatabaseContext : DbContext
 
             entity.Property(e => e.Id)
                 .HasColumnName("id")
+                .HasColumnType("integer")
                 .IsRequired();
 
             entity.Property(e => e.Name)
                 .HasColumnName("name")
+                .HasColumnType("character varying(20)")
                 .HasMaxLength(20)
                 .IsRequired();
 
             entity.Property(e => e.FileType)
                 .HasColumnName("fileType")
-                .HasMaxLength(20)
+                .HasColumnType("character varying(200)")
+                .HasMaxLength(200)
                 .IsRequired();
 
             entity.Property(e => e.Data)
                 .HasColumnName("image")
+                .HasColumnName("bytea")
                 .IsRequired();
         });
         base.OnModelCreating(modelBuilder);

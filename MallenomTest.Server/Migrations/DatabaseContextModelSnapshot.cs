@@ -33,12 +33,12 @@ namespace MallenomTest.Migrations
                     b.Property<byte[]>("Data")
                         .IsRequired()
                         .HasColumnType("bytea")
-                        .HasColumnName("image");
+                        .HasColumnName("bytea");
 
                     b.Property<string>("FileType")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("fileType");
 
                     b.Property<string>("Name")

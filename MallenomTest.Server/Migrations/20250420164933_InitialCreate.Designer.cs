@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MallenomTest.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250420163849_InitialCreate")]
+    [Migration("20250420164933_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -36,12 +36,12 @@ namespace MallenomTest.Migrations
                     b.Property<byte[]>("Data")
                         .IsRequired()
                         .HasColumnType("bytea")
-                        .HasColumnName("image");
+                        .HasColumnName("bytea");
 
                     b.Property<string>("FileType")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("fileType");
 
                     b.Property<string>("Name")

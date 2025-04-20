@@ -56,6 +56,18 @@ public class Program
             app.UseSwaggerUI();
         }
         
+        // Apply any pending migrations to simplify deploys
+        // Shouldn't be done if multi-instancing but this server isn't supposed to be multi-instanced
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            var context = services.GetRequiredService<DatabaseContext>();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+        }
         
         app.Run();
     }

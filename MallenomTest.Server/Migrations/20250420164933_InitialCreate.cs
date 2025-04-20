@@ -18,8 +18,8 @@ namespace MallenomTest.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    fileType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    image = table.Column<byte[]>(type: "bytea", nullable: false)
+                    fileType = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    bytea = table.Column<byte[]>(type: "bytea", nullable: false)
                 },
                 constraints: table =>
                 {
