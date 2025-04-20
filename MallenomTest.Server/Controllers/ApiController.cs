@@ -37,6 +37,10 @@ namespace MallenomTest.Controllers
             return Ok(images);
         }
 
+        /// <summary>
+        /// Endpoint for image addition
+        /// </summary>
+        /// <param name="image">Image to add</param>
         [Route("add")]
         [HttpPost]
         [ProducesResponseType(200)]
@@ -57,6 +61,11 @@ namespace MallenomTest.Controllers
         } 
         
 
+        /// <summary>
+        /// Endpoint for image updates
+        /// </summary>
+        /// <param name="id">ID of image to update</param>
+        /// <param name="image">Image to replace the stored one with</param>
         [Route("update/{id}")]
         [HttpPut]
         [ProducesResponseType(200)]
@@ -84,6 +93,10 @@ namespace MallenomTest.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Endpoint for image deletion
+        /// </summary>
+        /// <param name="id">ID of image to delete</param>
         [Route("delete/{id}")]
         [HttpDelete]
         [ProducesResponseType(200)]

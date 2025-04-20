@@ -61,6 +61,7 @@ public class ImagesService : IImagesService
     /// </summary>
     /// <param name="id">ID of image to update</param>
     /// <param name="imageRequest">Image to replace the existing one with</param>
+    /// <exception cref="ArgumentOutOfRangeException">No image found with ID used</exception>
     public async Task Update(int id, ImageRequest imageRequest)
     {
         // Get the image to update
@@ -80,7 +81,7 @@ public class ImagesService : IImagesService
     /// Adds an image to the database.
     /// </summary>
     /// <param name="id">ID of image to delete</param>
-    /// <exception cref="FileNotFoundException">Thrown in case the ID wasn't in the DB or the respective file was not found</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown in case the ID wasn't in the DB or the respective file was not found</exception>
     public async Task Delete(int id)
     {
         var image = _databaseContext.Images.FirstOrDefault(img => img.Id == id);

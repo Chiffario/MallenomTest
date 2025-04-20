@@ -3,7 +3,7 @@ namespace MallenomTest.Services.Models;
 public class ImageRequest
 {
     /// <summary>
-    /// Name of the image
+    /// Name of the image file
     /// </summary>
     public required string Name { get; set; }
     
