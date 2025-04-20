@@ -5,8 +5,8 @@ namespace MallenomTest.Services.Interfaces;
 
 public interface IImagesService
 {
-    List<ImageResponse>? GetAll();
-    void Add(ImageRequest imageRequest);
+    Task<List<ImageResponse>> GetAll();
+    Task Add(ImageRequest imageRequest);
     Task Update(int id, ImageRequest imageRequest);
     Task Delete(int id);
 }

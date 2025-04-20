@@ -24,9 +24,9 @@ public class ImagesService : IImagesService
     /// Get all the images from the database and return them in a list
     /// </summary>
     /// <returns>List of <see cref="ImageResponse"/></returns>
-    public List<ImageResponse> GetAll()
+    public Task<List<ImageResponse>> GetAll()
     {
-        List<ImageResponse> images = 
+        return
             _databaseContext.Images.AsNoTracking()
             .Select(i =>
                 new ImageResponse
@@ -37,29 +37,22 @@ public class ImagesService : IImagesService
                     Base64EncodedImage = Convert.ToBase64String(i.Data)
                 }
             )
-            .ToList();
-        return images;
+            .ToListAsync();
     }
 
     /// <summary>
     /// Adds an image to the database and to the filesystem.
-    /// Does so in a transactional way so a failed File creation shouldn't result in empty database entries 
     /// </summary>
     /// <param name="imageRequest">Image to add</param>
-    public void Add(ImageRequest imageRequest)
+    public async Task Add(ImageRequest imageRequest)
     {
-        var transaction = _databaseContext.Database.BeginTransaction();
-        
-        var image = new ImageModel
+        _databaseContext.Images.Add(new ImageModel
         {
             Name = imageRequest.Name,
             FileType = imageRequest.FileType,
             Data = Convert.FromBase64String(imageRequest.Base64EncodedImage)
-        };
-        _databaseContext.Images.Add(image);
-        _databaseContext.SaveChanges();
-        
-        transaction.Commit();
+        });
+        await _databaseContext.SaveChangesAsync();
     }
 
     /// <summary>
@@ -68,37 +61,34 @@ public class ImagesService : IImagesService
     /// </summary>
     /// <param name="id">ID of image to update</param>
     /// <param name="imageRequest">Image to replace the existing one with</param>
-    public Task Update(int id, ImageRequest imageRequest)
+    public async Task Update(int id, ImageRequest imageRequest)
     {
-        var transaction = _databaseContext.Database.BeginTransaction();
-        
-        var image =  _databaseContext.Images.First(img => img.Id == id);
-        
-        byte[] imageBytes = Convert.FromBase64String(imageRequest.Base64EncodedImage);
+        // Get the image to update
+        var image =  await _databaseContext.Images.FirstOrDefaultAsync(img => img.Id == id);
+
+        if (image == null) throw new ArgumentOutOfRangeException(nameof(id));
         _logger.LogInformation($"Updated {image.Id} and changed name from {image.Name} -> {imageRequest.Name}");
-        
+
+        // Update the image with new info
         image.Name = imageRequest.Name;
-        image.Data = imageBytes;
-        _databaseContext.SaveChanges();
-        
-        return transaction.CommitAsync();
+        image.Data = Convert.FromBase64String(imageRequest.Base64EncodedImage);
+
+        await _databaseContext.SaveChangesAsync();
     }
 
     /// <summary>
-    /// Adds an image to the database and to the filesystem.
-    /// Does so in a transactional way so a failed File creation/deletion shouldn't result in empty database entries 
+    /// Adds an image to the database.
     /// </summary>
     /// <param name="id">ID of image to delete</param>
     /// <exception cref="FileNotFoundException">Thrown in case the ID wasn't in the DB or the respective file was not found</exception>
-    public Task Delete(int id)
+    public async Task Delete(int id)
     {
-        var transaction = _databaseContext.Database.BeginTransaction();
-
         var image = _databaseContext.Images.FirstOrDefault(img => img.Id == id);
-        if (image != null) _databaseContext.Images.Remove(image);
-        _databaseContext.SaveChanges();
-        
-        return transaction.CommitAsync();
-
+        if (image == null)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
+        _databaseContext.Images.Remove(image);
+        await _databaseContext.SaveChangesAsync();
     }
 }

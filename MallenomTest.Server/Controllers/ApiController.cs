@@ -18,57 +18,95 @@ namespace MallenomTest.Controllers
             _imagesService = imagesService;
         }
 
+        /// <summary>
+        /// Gets all the images stored in the database. Returns an empty list if none were found
+        /// </summary>
+        /// <returns>List of <see cref="ImageResponse"/></returns>
         [Route("all")]
         [HttpGet]
-        public List<ImageResponse> GetAllImages()
+        [ProducesResponseType<List<ImageResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllImages()
         {
-            return _imagesService.GetAll() ?? new List<ImageResponse>();
+            var images = await _imagesService.GetAll();
+            if (images.Count == 0)
+            {
+                _logger.LogError("Error: No images found");
+                images = new List<ImageResponse>();
+            }
+
+            return Ok(images);
         }
 
         [Route("add")]
         [HttpPost]
-        public Task<IActionResult> Add([FromBody] ImageRequest image)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Add([FromBody] ImageRequest image)
         {
             try
             {
-                _imagesService.Add(image);
+                await _imagesService.Add(image);
             }
             catch (Exception e) 
             {
-                _logger.LogError($"Failed to add a file: {e}");
-                return Task.FromResult<IActionResult>(new StatusCodeResult(StatusCodes.Status500InternalServerError));
+                _logger.LogCritical($"Unexpected error: {e}");
+                return new StatusCodeResult(500);
             }
-            return Task.FromResult<IActionResult>(Ok());
+            return Ok();
         } 
+        
 
         [Route("update/{id}")]
         [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> Update(int id, [FromBody] ImageRequest image)
         {
             try
             {
                 await _imagesService.Update(id, image);
             }
+            catch (ArgumentOutOfRangeException e)
+            {
+                _logger.LogError($"Error: {e.Message}");
+                return Problem(
+                    detail: $"Update failed: image with ID {id} was not found",
+                    statusCode: 404);
+            }
             catch (Exception e)
             {
-                _logger.LogError($"Failed to update file: {e}");
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                _logger.LogCritical($"Unexpected error: {e}");
+                return new StatusCodeResult(500);
             }
             return Ok();
         }
 
         [Route("delete/{id}")]
         [HttpDelete]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 await _imagesService.Delete(id);
             }
-            catch
+            catch (ArgumentOutOfRangeException e)
             {
-                _logger.LogError("Failed to delete file");
-                return NotFound();
+                _logger.LogError($"Error: {e.Message}");
+                return Problem(
+                    detail: $"Deletion failed: image with ID {id} was not found",
+                    statusCode: 404);
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical($"Unexpected error: {e}");
+                return new StatusCodeResult(500);
             }
             return Ok();
         }
