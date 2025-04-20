@@ -20,5 +20,5 @@ public class ImageResponse
     /// <summary>
     /// Image encoded as base64
     /// </summary>
-    public required byte[] Base64EncodedImage { get; set; }
+    public required string Base64EncodedImage { get; set; }
 }

@@ -17,8 +17,6 @@
     depends_on:
       database:
         condition: service_healthy
-    volumes:
-      - files-volume:/app/storage
     networks:
       - mallenom-net
       
@@ -44,7 +42,6 @@
 
 volumes:
   data-volume:
-  files-volume:
     
 networks:
   mallenom-net:

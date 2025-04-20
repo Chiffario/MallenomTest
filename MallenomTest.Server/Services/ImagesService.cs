@@ -34,7 +34,7 @@ public class ImagesService : IImagesService
                     Id = i.Id,
                     Name = i.Name,
                     FileType = i.FileType,
-                    Base64EncodedImage = File.ReadAllBytes(BuildImagePath(_webHostEnvironment.ContentRootPath, i))
+                    Base64EncodedImage = Convert.ToBase64String(i.Data)
                 }
             )
             .ToList();
@@ -54,14 +54,10 @@ public class ImagesService : IImagesService
         {
             Name = imageRequest.Name,
             FileType = imageRequest.FileType,
+            Data = Convert.FromBase64String(imageRequest.Base64EncodedImage)
         };
         _databaseContext.Images.Add(image);
         _databaseContext.SaveChanges();
-
-        string imagePath = BuildImagePath(_webHostEnvironment.ContentRootPath, image);
-        
-        byte[] imageBytes = Convert.FromBase64String(imageRequest.Base64EncodedImage);
-        File.WriteAllBytes(imagePath, imageBytes);
         
         transaction.Commit();
     }
@@ -78,16 +74,12 @@ public class ImagesService : IImagesService
         
         var image =  _databaseContext.Images.First(img => img.Id == id);
         
-        string imagePath = BuildImagePath(_webHostEnvironment.ContentRootPath, image);
-        File.Delete(imagePath);
-        
         byte[] imageBytes = Convert.FromBase64String(imageRequest.Base64EncodedImage);
         _logger.LogInformation($"Updated {image.Id} and changed name from {image.Name} -> {imageRequest.Name}");
         
         image.Name = imageRequest.Name;
+        image.Data = imageBytes;
         _databaseContext.SaveChanges();
-        
-        File.WriteAllBytes(imagePath, imageBytes);
         
         return transaction.CommitAsync();
     }
@@ -103,29 +95,10 @@ public class ImagesService : IImagesService
         var transaction = _databaseContext.Database.BeginTransaction();
 
         var image = _databaseContext.Images.FirstOrDefault(img => img.Id == id);
-        if (image is null)
-        {
-            _logger.LogError("ID not found in db");
-            throw new FileNotFoundException();
-        }
-        string imagePath = BuildImagePath(_webHostEnvironment.ContentRootPath, image);
-        File.Delete(imagePath);
-        _logger.LogInformation($"Deleting at path {imagePath}");
-        _databaseContext.Images.Remove(image);
+        if (image != null) _databaseContext.Images.Remove(image);
         _databaseContext.SaveChanges();
         
         return transaction.CommitAsync();
 
-    }
-
-    /// <summary>
-    /// Creates a file path for filesystem manipulation
-    /// </summary>
-    /// <param name="contentRootPath">Web host's content root</param>
-    /// <param name="imageModel">Image to base the path one</param>
-    /// <returns>New path, usually looking like `/app/storage/id.type`</returns>
-    private static string BuildImagePath(string contentRootPath, ImageModel imageModel)
-    {
-        return Path.Combine(contentRootPath, "storage", imageModel.CreateFilePath());
     }
 }

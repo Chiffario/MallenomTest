@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
@@ -90,7 +91,7 @@ public partial class MainViewModel : ViewModelBase
         
         foreach (var image in images)
         {
-            var byteForm = image.Base64EncodedImage;
+            var byteForm = Convert.FromBase64String(image.Base64EncodedImage);
             var imageStream = new MemoryStream(byteForm);
             var bitmap = new Bitmap(imageStream);
             
