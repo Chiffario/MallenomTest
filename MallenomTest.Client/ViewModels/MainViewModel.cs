@@ -131,16 +131,11 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            string err;
-            switch (resp.StatusCode)
+            var err = resp.StatusCode switch
             {
-                case HttpStatusCode.BadRequest:
-                    err = "Invalid image";
-                    break;
-                default:
-                    err = "Unknown error";
-                    break;
-            }
+                HttpStatusCode.BadRequest => "Invalid image",
+                _ => "Unknown error"
+            };
 
             await ShowError(err);
         }
@@ -161,7 +156,7 @@ public partial class MainViewModel : ViewModelBase
             return;
         }
         
-        var fileBytes = File.ReadAllBytes(file.Path.AbsolutePath);
+        var fileBytes = await File.ReadAllBytesAsync(file.Path.AbsolutePath);
         var extension = Path.GetExtension(file.Path.AbsolutePath);
 
         var req = new ImageRequest
@@ -179,19 +174,12 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            string err;
-            switch (resp.StatusCode)
+            var err = resp.StatusCode switch
             {
-                case HttpStatusCode.NotFound:
-                    err = "Image not found in the database";
-                    break;
-                case HttpStatusCode.BadRequest:
-                    err = "Invalid image ID";
-                    break;
-                default:
-                    err = "Unknown error";
-                    break;
-            }
+                HttpStatusCode.NotFound => "Image not found in the database",
+                HttpStatusCode.BadRequest => "Invalid image ID",
+                _ => "Unknown error"
+            };
 
             await ShowError(err);
         }
@@ -210,19 +198,12 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            string err;
-            switch (resp.StatusCode)
+            var err = resp.StatusCode switch
             {
-                case HttpStatusCode.NotFound:
-                    err = "Image not found in the database";
-                    break;
-                case HttpStatusCode.BadRequest:
-                    err = "Invalid image ID";
-                    break;
-                default:
-                    err = "Unknown error";
-                    break;
-            }
+                HttpStatusCode.NotFound => "Image not found in the database",
+                HttpStatusCode.BadRequest => "Invalid image ID",
+                _ => "Unknown error"
+            };
 
             await ShowError(err);
         }
