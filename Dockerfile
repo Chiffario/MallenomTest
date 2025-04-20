@@ -15,7 +15,7 @@ RUN dotnet build "MallenomTest.Server.csproj" -c $BUILD_CONFIGURATION -o /app/bu
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "MallenomTest.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MallenomTest.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -p:PublishProfile=DefaultContainer
 
 FROM base AS final
 WORKDIR /app
