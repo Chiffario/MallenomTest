@@ -15,21 +15,16 @@ namespace MallenomTest.Migrations
                 name: "Images",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    FileType = table.Column<string>(type: "text", nullable: false),
-                    Data = table.Column<byte[]>(type: "bytea", nullable: false)
+                    name = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    fileType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    image = table.Column<byte[]>(type: "bytea", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.PrimaryKey("PK_Images", x => x.id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Images_Id",
-                table: "Images",
-                column: "Id");
         }
 
         /// <inheritdoc />
