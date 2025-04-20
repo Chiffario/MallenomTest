@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net;
+using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -128,7 +131,18 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            await ShowError(resp.StatusCode.ToString());
+            string err;
+            switch (resp.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    err = "Invalid image";
+                    break;
+                default:
+                    err = "Unknown error";
+                    break;
+            }
+
+            await ShowError(err);
         }
         
     }
@@ -165,7 +179,21 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            await ShowError(resp.StatusCode.ToString());
+            string err;
+            switch (resp.StatusCode)
+            {
+                case HttpStatusCode.NotFound:
+                    err = "Image not found in the database";
+                    break;
+                case HttpStatusCode.BadRequest:
+                    err = "Invalid image ID";
+                    break;
+                default:
+                    err = "Unknown error";
+                    break;
+            }
+
+            await ShowError(err);
         }
     }
     
@@ -182,7 +210,21 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            await ShowError(resp.StatusCode.ToString());
+            string err;
+            switch (resp.StatusCode)
+            {
+                case HttpStatusCode.NotFound:
+                    err = "Image not found in the database";
+                    break;
+                case HttpStatusCode.BadRequest:
+                    err = "Invalid image ID";
+                    break;
+                default:
+                    err = "Unknown error";
+                    break;
+            }
+
+            await ShowError(err);
         }
     }
     

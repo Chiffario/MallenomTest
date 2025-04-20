@@ -13,6 +13,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddLogging();
+        
+
 
         // Add server state related services
         var dbConfig = builder.Configuration.GetSection("Database");
@@ -31,6 +33,7 @@ public class Program
         
         // Add endpoint-related services
         builder.Services.AddHealthChecks();
+        builder.Services.AddProblemDetails(); // Problem details allow for extra error information
         builder.Services.AddControllers();
         
         // Add API documentation services
@@ -52,7 +55,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
         
         app.Run();
     }
