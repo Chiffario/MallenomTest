@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MallenomTest.Client.Api.Interfaces;
 using MallenomTest.Client.Models;
@@ -12,59 +13,28 @@ using MallenomTest.Client.Services.Interfaces;
 using MallenomTest.Services.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ReactiveUI;
 
 namespace MallenomTest.Client.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
     #region Properties
+    
+    [ObservableProperty]
     private bool _enable = false;
 
-    public bool Enable
-    {
-        get => _enable;
-        set => this.RaiseAndSetIfChanged(ref _enable, value);
-    }
-
+    [ObservableProperty]
     private bool _isNotificationOpen;
 
-    public bool IsNotificationOpen
-    {
-        get => _isNotificationOpen;
-        set => this.RaiseAndSetIfChanged(ref _isNotificationOpen, value);
-    }
-    
+    [ObservableProperty]
     private bool _isErrorOpen;
 
-    public bool IsErrorOpen
-    {
-        get => _isErrorOpen;
-        set => this.RaiseAndSetIfChanged(ref _isErrorOpen, value);
-    }
-
+    [ObservableProperty]
     private string _errorText;
 
-    public string ErrorText
-    {
-        get => _errorText;
-        set => this.RaiseAndSetIfChanged(ref _errorText, value);
-    }
-
+    [ObservableProperty]
     private ObservableCollection<ImageModel> _images = null!;
     
-    public ObservableCollection<ImageModel> Images
-    {
-        get
-        {
-            return _images;
-        }
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _images, value);
-        }
-    }
-
     private ImageModel? _selectedImage;
 
     public ImageModel? SelectedImage
@@ -76,8 +46,7 @@ public partial class MainViewModel : ViewModelBase
             _selectedImage = value;
         }
     }
-
-
+    
     #endregion
     
     #region .ctor
