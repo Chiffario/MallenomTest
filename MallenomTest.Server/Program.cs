@@ -12,13 +12,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddHealthChecks();
         builder.Services.AddLogging();
-        
+
+        // Add server state related services
         var dbConfig = builder.Configuration.GetSection("Database");
         var connectionString = new NpgsqlConnectionStringBuilder
         {
@@ -33,7 +29,14 @@ public class Program
             op.UseNpgsql(connectionString.ConnectionString));
         builder.Services.AddScoped<IImagesService, ImagesService>();
         
+        // Add endpoint-related services
+        builder.Services.AddHealthChecks();
         builder.Services.AddControllers();
+        
+        // Add API documentation services
+        builder.Services.AddOpenApi();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
         
         var app = builder.Build();
         
