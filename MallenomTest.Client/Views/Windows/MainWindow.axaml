@@ -38,6 +38,23 @@
                         Text="Изображение удалено"></TextBlock>
                 </Border>
             </Popup>
+            <Popup Name="Error"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Width="400"
+                   Height="100"
+                   Placement="Center"
+                   Margin="200"
+                   Topmost="True"
+                   IsOpen="{Binding IsErrorOpen}">
+                <Border Background="#ed8796" BorderBrush="#1e2030">
+                    <TextBlock Foreground="#4c4f69"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="32"
+                               Text="{Binding ErrorText}"></TextBlock>
+                </Border>
+            </Popup>
             <DataGrid x:Name="ImageGrid"
                       Margin="20"
                       ItemsSource="{Binding Images}"

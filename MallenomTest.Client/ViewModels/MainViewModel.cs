@@ -34,6 +34,22 @@ public partial class MainViewModel : ViewModelBase
         get => _isNotificationOpen;
         set => this.RaiseAndSetIfChanged(ref _isNotificationOpen, value);
     }
+    
+    private bool _isErrorOpen;
+
+    public bool IsErrorOpen
+    {
+        get => _isErrorOpen;
+        set => this.RaiseAndSetIfChanged(ref _isErrorOpen, value);
+    }
+
+    private string _errorText;
+
+    public string ErrorText
+    {
+        get => _errorText;
+        set => this.RaiseAndSetIfChanged(ref _errorText, value);
+    }
 
     private ObservableCollection<ImageModel> _images = null!;
     
@@ -60,7 +76,8 @@ public partial class MainViewModel : ViewModelBase
             _selectedImage = value;
         }
     }
-    
+
+
     #endregion
     
     #region .ctor
@@ -123,7 +140,7 @@ public partial class MainViewModel : ViewModelBase
 
         if (file is null)
         {
-            Console.WriteLine("File not chosen");
+            await ShowError("File not chosen");
             return;
         }
         
@@ -142,7 +159,7 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            Console.WriteLine($"Couldn't add an image - {resp.StatusCode}");
+            await ShowError(resp.StatusCode.ToString());
         }
         
     }
@@ -179,7 +196,7 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            Console.WriteLine($"Couldn't update an image {SelectedImage!.Id} - {resp.StatusCode}");
+            await ShowError(resp.StatusCode.ToString());
         }
     }
     
@@ -196,7 +213,7 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            Console.WriteLine($"Couldn't delete an image {SelectedImage.Id} - {resp.StatusCode}");
+            await ShowError(resp.StatusCode.ToString());
         }
     }
     
@@ -209,6 +226,14 @@ public partial class MainViewModel : ViewModelBase
         IsNotificationOpen = true;
         await Task.Delay(2000);
         IsNotificationOpen = false;
+    }
+    
+    private async Task ShowError(string error)
+    {
+        ErrorText = error;
+        IsErrorOpen = true;
+        await Task.Delay(2000);
+        IsErrorOpen = false;
     }
     
     #endregion
