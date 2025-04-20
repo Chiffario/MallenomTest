@@ -17,6 +17,7 @@ using MallenomTest.Client.ViewModels;
 using MallenomTest.Client.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MainWindow = MallenomTest.Client.Views.Windows.MainWindow;
 
 namespace MallenomTest.Client;
 

@@ -33,7 +33,7 @@ public partial class MainViewModel : ViewModelBase
     private bool _isErrorOpen;
 
     [ObservableProperty]
-    private string _errorText;
+    private string _errorText = null!;
 
     [ObservableProperty]
     private ObservableCollection<ImageModel> _images = null!;
