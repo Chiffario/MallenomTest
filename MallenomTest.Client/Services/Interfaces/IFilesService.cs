@@ -3,6 +3,9 @@ using Avalonia.Platform.Storage;
 
 namespace MallenomTest.Client.Services.Interfaces;
 
+/// <summary>
+/// Simple service interface for filesystem interactions
+/// </summary>
 public interface IFilesService
 {
     /// <summary>

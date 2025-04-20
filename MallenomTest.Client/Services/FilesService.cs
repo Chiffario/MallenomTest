@@ -6,6 +6,9 @@ using MallenomTest.Client.Services.Interfaces;
 
 namespace MallenomTest.Client.Services;
 
+/// <summary>
+/// Simple service for filesystem interactions
+/// </summary>
 public class FilesService : IFilesService
 {
     private readonly Window _target;
