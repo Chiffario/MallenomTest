@@ -7,9 +7,8 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MallenomTest.Server/MallenomTest.Server.csproj", "MallenomTest.Server/"]
-COPY ["MallenomTest.Contracts/MallenomTest.Contracts.csproj", "MallenomTest.Contracts/"]
-RUN dotnet restore "MallenomTest.Server/MallenomTest.Server.csproj"
+COPY ["MallenomTest.Server/MallenomTest.Server.csproj", "MallenomTest.Contracts/MallenomTest.Contracts.csproj", "./"]
+RUN dotnet restore "MallenomTest.Server.csproj"
 COPY . .
 WORKDIR "/src/MallenomTest.Server"
 RUN dotnet build "MallenomTest.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
