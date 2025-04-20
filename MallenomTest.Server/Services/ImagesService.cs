@@ -10,13 +10,11 @@ namespace MallenomTest.Services;
 public class ImagesService : IImagesService
 {
     private readonly DatabaseContext _databaseContext;
-    private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ILogger<ImagesService> _logger;
 
-    public ImagesService(DatabaseContext context, ILogger<ImagesService> logger, IWebHostEnvironment environment)
+    public ImagesService(DatabaseContext context, ILogger<ImagesService> logger)
     {
         _databaseContext = context;
-        _webHostEnvironment = environment;
         _logger = logger;
     }
     
