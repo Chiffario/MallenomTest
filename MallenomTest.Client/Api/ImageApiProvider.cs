@@ -15,8 +15,8 @@ public class ImageApiProvider : IImageApiProvider
     private const string ApiAddLink = "add";
     private const string ApiUpdateLink = "update/{0}";
     private const string ApiDeleteLink = "delete/{0}";
-    
-    
+
+
     private readonly HttpClient _httpClient;
 
     public ImageApiProvider(HttpClient client, string apiBase)
@@ -24,7 +24,7 @@ public class ImageApiProvider : IImageApiProvider
         _apiBase = apiBase;
         _httpClient = client;
     }
-    
+
     public async Task<ImageResponse[]> Get()
     {
         var requestMessage = new HttpRequestMessage

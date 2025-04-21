@@ -52,14 +52,14 @@ namespace MallenomTest.Controllers
             {
                 await _imagesService.Add(image);
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 _logger.LogCritical($"Unexpected error: {e}");
                 return new StatusCodeResult(500);
             }
             return Ok();
-        } 
-        
+        }
+
 
         /// <summary>
         /// Endpoint for image updates

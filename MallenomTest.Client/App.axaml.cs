@@ -40,9 +40,9 @@ public partial class App : Application
             };
 
             desktop.MainWindow = mainWindow;
-            
+
             var serviceCollection = new ServiceCollection();
-            
+
             serviceCollection.AddSingleton<HttpClient>();
             serviceCollection.AddSingleton<IImageApiProvider>(s =>
             {
@@ -54,7 +54,7 @@ public partial class App : Application
             });
             serviceCollection.AddTransient<MainViewModel>();
             serviceCollection.AddSingleton<IFilesService>(x => new FilesService(desktop.MainWindow));
-            
+
             ServiceProvider = serviceCollection.BuildServiceProvider();
         }
 
@@ -75,6 +75,6 @@ public partial class App : Application
     }
 
     public new static App? Current => Application.Current as App;
-    
+
     public IServiceProvider? ServiceProvider { get; private set; }
 }

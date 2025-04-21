@@ -13,12 +13,12 @@ public class ImageModel
     /// Name of the image file
     /// </summary>
     public required string Name { get; set; }
-    
+
     /// <summary>
     /// Canonical file extension of the image
     /// </summary>
     public required string FileType { get; set; }
-    
+
     /// <summary>
     /// Raw image data as a byte blob
     /// </summary>

@@ -22,7 +22,7 @@ namespace MallenomTest.Client.ViewModels;
 public partial class MainViewModel : ViewModelBase
 {
     #region Properties
-    
+
     [ObservableProperty]
     private bool _enable = false;
 
@@ -37,7 +37,7 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private ObservableCollection<ImageModel> _images = null!;
-    
+
     private ImageModel? _selectedImage;
 
     public ImageModel? SelectedImage
@@ -49,9 +49,9 @@ public partial class MainViewModel : ViewModelBase
             _selectedImage = value;
         }
     }
-    
+
     #endregion
-    
+
     #region .ctor
 
     public MainViewModel()
@@ -59,12 +59,12 @@ public partial class MainViewModel : ViewModelBase
         Images = new ObservableCollection<ImageModel>();
         Enable = false;
     }
-    
+
     #endregion
 
     #region Commands
-    
-    
+
+
     [RelayCommand]
     private async Task GetImagesAsync()
     {
@@ -74,23 +74,23 @@ public partial class MainViewModel : ViewModelBase
             Console.WriteLine("Image Provider was not found");
             return;
         }
-        
+
         var images = await imageApiProvider.Get();
         var imageList = new List<ImageModel>();
-        
+
         foreach (var image in images)
         {
             var byteForm = Convert.FromBase64String(image.Base64EncodedImage);
             var imageStream = new MemoryStream(byteForm);
             var bitmap = new Bitmap(imageStream);
-            
+
             var imageModel = new ImageModel(image.Name, bitmap, image.Id);
             imageList.Add(imageModel);
         };
-        
+
         // Comparison is defined in-place because this is the only case of it being used
         imageList.Sort((lhs, rhs) => lhs.Id.CompareTo(rhs.Id));
-        
+
         Images = new ObservableCollection<ImageModel>(imageList);
     }
 
@@ -106,7 +106,7 @@ public partial class MainViewModel : ViewModelBase
             Console.WriteLine("Image Provider was not found");
             return;
         }
-        
+
         var file = await filesService?
             .OpenFileAsync()!;
 
@@ -115,7 +115,7 @@ public partial class MainViewModel : ViewModelBase
             await ShowError("File not chosen");
             return;
         }
-        
+
         var fileBytes = File.ReadAllBytes(file.Path.AbsolutePath);
         var extension = Path.GetExtension(file.Path.AbsolutePath);
         var resp = await imageApiProvider.Add(new ImageRequest
@@ -139,13 +139,13 @@ public partial class MainViewModel : ViewModelBase
 
             await ShowError(err);
         }
-        
+
     }
-    
+
     [RelayCommand]
     private async Task UpdateImage()
     {
-        var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>()!;        
+        var imageApiProvider = App.Current?.ServiceProvider?.GetService<IImageApiProvider>()!;
         var filesService = App.Current?.ServiceProvider?.GetService<IFilesService>();
 
         var file = await filesService?.OpenFileAsync()!;
@@ -155,7 +155,7 @@ public partial class MainViewModel : ViewModelBase
             Console.WriteLine("File not chosen");
             return;
         }
-        
+
         var fileBytes = await File.ReadAllBytesAsync(file.Path.AbsolutePath);
         var extension = Path.GetExtension(file.Path.AbsolutePath);
 
@@ -167,7 +167,7 @@ public partial class MainViewModel : ViewModelBase
         };
         // SelectedImage is never `null` as the respective button cannot be pushed without a selected image
         var resp = await imageApiProvider.Update(SelectedImage!.Id, req);
-        
+
         if (resp.IsSuccessStatusCode)
         {
             await GetImagesAsync();
@@ -184,7 +184,7 @@ public partial class MainViewModel : ViewModelBase
             await ShowError(err);
         }
     }
-    
+
     [RelayCommand]
     private async Task DeleteImage()
     {
@@ -208,9 +208,9 @@ public partial class MainViewModel : ViewModelBase
             await ShowError(err);
         }
     }
-    
+
     #endregion
-    
+
     #region Utility
 
     private async Task ShowPopup()
@@ -219,7 +219,7 @@ public partial class MainViewModel : ViewModelBase
         await Task.Delay(2000);
         IsNotificationOpen = false;
     }
-    
+
     private async Task ShowError(string error)
     {
         ErrorText = error;
@@ -227,6 +227,6 @@ public partial class MainViewModel : ViewModelBase
         await Task.Delay(2000);
         IsErrorOpen = false;
     }
-    
+
     #endregion
 }

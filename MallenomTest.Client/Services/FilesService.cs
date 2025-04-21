@@ -17,7 +17,7 @@ public class FilesService : IFilesService
     {
         _target = target;
     }
-    
+
     /// <summary>
     /// Opens system file picker to select a file
     /// </summary>

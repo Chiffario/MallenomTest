@@ -17,7 +17,7 @@ public class ImagesService : IImagesService
         _databaseContext = context;
         _logger = logger;
     }
-    
+
     /// <summary>
     /// Get all the images from the database and return them in a list
     /// </summary>
@@ -63,7 +63,7 @@ public class ImagesService : IImagesService
     public async Task Update(int id, ImageRequest imageRequest)
     {
         // Get the image to update
-        var image =  await _databaseContext.Images.FirstOrDefaultAsync(img => img.Id == id);
+        var image = await _databaseContext.Images.FirstOrDefaultAsync(img => img.Id == id);
 
         if (image == null) throw new ArgumentOutOfRangeException(nameof(id));
         _logger.LogInformation($"Updated {image.Id} and changed name from {image.Name} -> {imageRequest.Name}");

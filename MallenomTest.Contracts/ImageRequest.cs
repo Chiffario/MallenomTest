@@ -6,12 +6,12 @@ public class ImageRequest
     /// Name of the image file
     /// </summary>
     public required string Name { get; set; }
-    
+
     /// <summary>
     /// Canonical file extension of the image
     /// </summary>
     public required string FileType { get; set; }
-    
+
     /// <summary>
     /// Image encoded as base64
     /// </summary>

@@ -24,7 +24,7 @@ public class ImageModel
     /// Name of the image file
     /// </summary>
     public string Name { get; set; }
-    
+
     /// <summary>
     /// <see cref="Bitmap"/> representation of the image
     /// </summary>

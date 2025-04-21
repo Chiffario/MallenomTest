@@ -27,7 +27,7 @@ public class DatabaseConnection
         Username = new EnvironmentVariableConfigValue(username);
         Password = new EnvironmentVariableConfigValue(password);
     }
-    
+
     #endregion
 
     #region Properties
@@ -49,7 +49,7 @@ public class DatabaseConnection
         EnvironmentVariableName = "DB_USERNAME",
         FallbackValue = "user"
     };
-    
+
     /// <summary>
     /// Get database name
     /// </summary>
@@ -58,7 +58,7 @@ public class DatabaseConnection
         EnvironmentVariableName = "DB_DATABASE",
         FallbackValue = "mallenom"
     };
-    
+
     /// <summary>
     /// Get database server port
     /// </summary>
@@ -67,7 +67,7 @@ public class DatabaseConnection
         EnvironmentVariableName = "DB_PORT",
         FallbackValue = "5432"
     };
-    
+
     public EnvironmentVariableConfigValue Password { get; init; } = new EnvironmentVariableConfigValue()
     {
         EnvironmentVariableName = "DB_PASSWORD",
@@ -75,7 +75,7 @@ public class DatabaseConnection
     };
 
     #endregion
-    
+
     #region Methods
 
     /// <summary>Create an instance of <see cref = "DatabaseConnection" />.</summary>
