@@ -21,8 +21,8 @@ public class Program
         // Add server state related services
         builder.Services.AddDbContext<DatabaseContext>(op =>
             op.UseNpgsql(builder.Configuration.GetPostgresConnectionFromEnv()), 
-            ServiceLifetime.Scoped);
-        builder.Services.AddScoped<IImagesService, ImagesService>();
+            ServiceLifetime.Transient);
+        builder.Services.AddTransient<IImagesService, ImagesService>();
         
         // Add endpoint-related services
         builder.Services.AddHealthChecks();
