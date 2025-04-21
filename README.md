@@ -13,8 +13,7 @@
 1. Run `docker compose up` in the project root (you can also add `-d` to detach the containers and let them run in the background)
    1. Optionally - inspect your docker processes via `docker ps`. You should see two containers - `mallenomtest` (the server) and `alpine:postgres` (the database)
    2. You can also verify healthiness of the server by making a GET request to `http://localhost:5141/health`. If the response is `Healthy`, the server is up and running
-2. For the initial setup - apply migrations by using `dotnet ef database update`. This only needs to be done once
-3. If you want to shutdown the database and the server while they are detached - run `docker compose down` in the project root
+2. If you want to shutdown the database and the server while they are detached - run `docker compose down` in the project root
 
 ## Client
 
