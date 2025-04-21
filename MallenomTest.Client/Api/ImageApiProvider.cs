@@ -10,8 +10,7 @@ namespace MallenomTest.Client.Api;
 
 public class ImageApiProvider : IImageApiProvider
 {
-    // TODO: Replace with runtime-declared
-    private const string ApiBase = "http://localhost:5141/api/images/";
+    private readonly string _apiBase;
     private const string ApiGetLink = "all";
     private const string ApiAddLink = "add";
     private const string ApiUpdateLink = "update/{0}";
@@ -20,8 +19,9 @@ public class ImageApiProvider : IImageApiProvider
     
     private readonly HttpClient _httpClient;
 
-    public ImageApiProvider(HttpClient client)
+    public ImageApiProvider(HttpClient client, string apiBase)
     {
+        _apiBase = apiBase;
         _httpClient = client;
     }
     
@@ -30,7 +30,7 @@ public class ImageApiProvider : IImageApiProvider
         var requestMessage = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(ApiBase + ApiGetLink),
+            RequestUri = new Uri(_apiBase + ApiGetLink),
         };
 
         var response = await _httpClient.SendAsync(requestMessage);
@@ -48,7 +48,7 @@ public class ImageApiProvider : IImageApiProvider
         var requestMessage = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(ApiBase + ApiAddLink),
+            RequestUri = new Uri(_apiBase + ApiAddLink),
             Content = JsonContent.Create(image),
         };
 
@@ -60,7 +60,7 @@ public class ImageApiProvider : IImageApiProvider
         var requestMessage = new HttpRequestMessage
         {
             Method = HttpMethod.Put,
-            RequestUri = new Uri(ApiBase + string.Format(ApiUpdateLink, id)),
+            RequestUri = new Uri(_apiBase + string.Format(ApiUpdateLink, id)),
             Content = JsonContent.Create(image)
         };
 
@@ -72,7 +72,7 @@ public class ImageApiProvider : IImageApiProvider
         var requestMessage = new HttpRequestMessage
         {
             Method = HttpMethod.Delete,
-            RequestUri = new Uri(ApiBase + string.Format(ApiDeleteLink, id)),
+            RequestUri = new Uri(_apiBase + string.Format(ApiDeleteLink, id)),
         };
 
         return await _httpClient.SendAsync(requestMessage);

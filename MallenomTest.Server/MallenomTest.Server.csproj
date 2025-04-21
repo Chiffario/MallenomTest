@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MallenomTest.Contracts\MallenomTest.Contracts.csproj" />
+      <ProjectReference Include="..\MallenomTest.Infrastructure\MallenomTest.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -43,9 +43,16 @@ public partial class App : Application
             
             var serviceCollection = new ServiceCollection();
             
-            serviceCollection.AddSingleton<IImageApiProvider, ImageApiProvider>();
-            serviceCollection.AddTransient<MainViewModel>();
             serviceCollection.AddSingleton<HttpClient>();
+            serviceCollection.AddSingleton<IImageApiProvider>(s =>
+            {
+                var apiConnectionString = Environment.GetEnvironmentVariable("API_CONNECTION_STRING") ??
+                                          "http://localhost:5141/api/images/";
+                var httpClient = s.GetRequiredService<HttpClient>();
+                var imageService = new ImageApiProvider(httpClient, apiConnectionString);
+                return imageService;
+            });
+            serviceCollection.AddTransient<MainViewModel>();
             serviceCollection.AddSingleton<IFilesService>(x => new FilesService(desktop.MainWindow));
             
             ServiceProvider = serviceCollection.BuildServiceProvider();

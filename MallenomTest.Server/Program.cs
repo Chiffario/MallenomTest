@@ -1,4 +1,6 @@
+using MallenomTest.Configuration;
 using MallenomTest.Database;
+using MallenomTest.Infrastructure;
 using MallenomTest.Services;
 using MallenomTest.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -17,18 +19,9 @@ public class Program
 
 
         // Add server state related services
-        var dbConfig = builder.Configuration.GetSection("Database");
-        var connectionString = new NpgsqlConnectionStringBuilder
-        {
-            Host = dbConfig["Host"],
-            Port = int.Parse(dbConfig["Port"]!),
-            Database = dbConfig["Database"],
-            Username = dbConfig["Username"],
-            Password = dbConfig["Password"]
-        };
-        
         builder.Services.AddDbContext<DatabaseContext>(op =>
-            op.UseNpgsql(connectionString.ConnectionString));
+            op.UseNpgsql(builder.Configuration.GetPostgresConnectionFromEnv()), 
+            ServiceLifetime.Scoped);
         builder.Services.AddScoped<IImagesService, ImagesService>();
         
         // Add endpoint-related services
